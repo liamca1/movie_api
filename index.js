@@ -18,13 +18,15 @@ app.get('/', (req, res) => {
 });
 
 // Uses express.static to serve "documentation.html" file from the public folder.
-app.arguments(express.static('public/documentation.html'));
+app.get('documentation', (req, res) => {
+    res.sendFile('public/documentation.html', { root: __dirname });
+});
 
 // Use the Morgan middleware library to log all requests (instead of using the fs module to write to a text file).
 // Try navigating to a few pages in your browser and test that the correct information is logged to the terminal.
 // Create an error-handling middleware function that will log all application-level errors to the terminal.
 // Log all requests with Morgan middleware library.
-app.user((err, req, res, next) => {
+app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
