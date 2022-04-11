@@ -5,9 +5,36 @@ const app = express();
 
 app.use(morgan('common'));
 
-let movies = {
-    
+// defining empty URL endpoints
+
+let movies = [{
+    title: 'Apocalypse Now',
+    director: 'Francis Ford Coppola',
+    genre: ['War', 'Drama', 'Adventure']
+},
+{
+    title: 'The Nothing Factory',
+    director: 'Pedro Pinho',
+    genre: ['Fantasy', 'Drama']
+},
+{
+    title: 'Winter Sleep',
+    director: 'Nuri Bilge Ceylan',
+    genre: 'Drama'
+},
+{
+    title: 'The Wailing',
+    director: 'Na Hong-jin',
+    genre: ['Drama', 'Horror', 'Thriller']
+},
+{
+    title: 'First Cow',
+    director: 'Kelly Reichardt',
+    genre: ['Drama', 'Western']
 }
+];
+
+let genres = ['War', 'Drama', 'Aventure', 'Fantasy', 'Horror', 'Thriller', 'Drama', 'Western'];
 
 // Return a list of all movies to the user
 app.get('/movies', (req, res) => {
@@ -21,13 +48,13 @@ app.get('/movies/:title', (req, res) => {
 });
 
 // Return description (data) about a genre by name
-app.get('/movies/genres/:genre', (req, res) => {
+app.get('/genres/:genre', (req, res) => {
     res.json(genres.find((genres) =>
-    { return genres.genre.description === req.params.genre }));
+    { return genres.genre === req.params.genre}));
 });
 
 // Return data about a director by name
-app.get('/movies/directors/:director', (req, res) => {
+app.get('/directors/:director', (req, res) => {
     res.json(directors.find((directors) =>
     { return directors.director === req.params.director}));
 });
