@@ -1,134 +1,221 @@
 const express = require('express'),
- morgan = require('morgan');
-
+  bodyparser = require('body-parser'),
+  uuid = require('uuid');
+const  morgan =require('morgan');
 const app = express();
+const mongoose = require('mongoose');
+const Models = require('./models.js');
 
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/test', { 
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+ });
+app.use(bodyparser.json());
+//log requests to server
 app.use(morgan('common'));
-
-// defining empty URL endpoints
-
-let movies = [{
-    title: 'Apocalypse Now',
-    director: 'Francis Ford Coppola',
-    genre: ['War', 'Drama', 'Adventure']
-},
-{
-    title: 'The Nothing Factory',
-    director: 'Pedro Pinho',
-    genre: ['Fantasy', 'Drama']
-},
-{
-    title: 'Winter Sleep',
-    director: 'Nuri Bilge Ceylan',
-    genre: 'Drama'
-},
-{
-    title: 'The Wailing',
-    director: 'Na Hong-jin',
-    genre: ['Drama', 'Horror', 'Thriller']
-},
-{
-    title: 'First Cow',
-    director: 'Kelly Reichardt',
-    genre: ['Drama', 'Western']
-}
-];
-
-let genres = ['War', 'Drama', 'Aventure', 'Fantasy', 'Horror', 'Thriller', 'Drama', 'Western'];
-
-// Return a list of all movies to the user
-app.get('/movies', (req, res) => {
-    res.json(movies);
-});
-
-// Return data about a single movie by title
-app.get('/movies/:title', (req, res) => {
-    res.json(movies.find((movies) =>
-    { return movies.title === req.params.title}));
-});
-
-// Return description (data) about a genre by name
-app.get('/genres/:genre', (req, res) => {
-    res.json(genres.find((genres) =>
-    { return genres.genre === req.params.genre}));
-});
-
-// Return data about a director by name
-app.get('/directors/:director', (req, res) => {
-    res.json(directors.find((directors) =>
-    { return directors.director === req.params.director}));
-});
-
-// Allow new users to register
-app.post('/users', (req, res) => {
-    let newUser = req.body;
-
-    if (!newUser.userName) {
-        const message = 'Please create your username';
-        res.status(400).send(message);
-    }   else {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        res.status(201).send(newUser);
-    }
-});
-
-// Allow users to update their user info (username)
-app.put('/users/:usernanme', (req, res) => {
-    let username = users.find((username) => { return username.username === req.params.name });
-
-    if (username) {
-        username.username[req.params.username] = parseInt(req.params.username);
-        res.status(201).send('User' + ' successfully updated their username to ' + req.params.username + '.');
-    }   else {
-        res.status(404).send('User with the username ' + req.params,username + ' was not found.');
-    }
-});
-
-// Allow users to add a movie to their list of favourites
-
-
-// Allow users to delete a movie from their list of favourites
-app.delete('/users/:username/favourites/:title', (req, res) => {
-    let title = users.find((title) => { return users.username === req.params.username });
-
-    if (title) {
-        users = users.filter((obj) => { return obj.username !== req.params.username });
-        res.status(201).send('User ' + req.params.username + ' has been deleted.');
-    }
-});
-
-// Allow existing users to deregister
-app.delete('/users/:username', (req, res) => {
-    let user = users.find((user) => { return user.username === req.params.username });
-
-    if (user) {
-        users = users.filter((obj) => { return obj.username !== req.params.username });
-        res.status(201).send('User: ' + req.params.username + ' was deleted.');
-    }
-});
-
-// Express GET route with the endpoint "/" that returns a default textual response. 
-// (* I don't know how to run the project from the terminal and navigate to different URL endpoints..)
 app.get('/', (req, res) => {
-    let responseText = 'Here we are!';
-    res.send(responseText)
+  res.send('Welcome to my myFlix website');
 });
 
-// Uses express.static to serve "documentation.html" file from the public folder.
-app.get('documentation', (req, res) => {
-    res.sendFile('public/documentation.html', { root: __dirname });
+// READ. Get all movies - okay.
+app.get('/movies', (req, res) => {
+  Movies.find()
+    .then((movie) => {
+      res.status(201).json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// Use the Morgan middleware library to log all requests (instead of using the fs module to write to a text file).
-// Try navigating to a few pages in your browser and test that the correct information is logged to the terminal.
-// Create an error-handling middleware function that will log all application-level errors to the terminal.
-// Log all requests with Morgan middleware library.
+// READ. Get all users - okay.
+app.get('/users', function (req, res) {
+  Users.find()
+    .then(function (users) {
+      res.status(201).json(users);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// READ. Get a user by username - okay.
+app.get('/users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// READ. responds with a json of the specific movie asked for title. - okay.
+app.get('/movies/:Title', (req, res) => {
+  Movies.findOne({ Title: req.params.Title})
+  .then((movie) => {
+    res.json(movie);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
+});
+
+// READ. Responds with a json of the specific movie asked for genre. - okay.
+app.get('/genre/:Name', (req, res) => {
+  Movies.findOne({ 'Genre.Name': req.params.Name })
+      .then((movie) => {
+          res.json(movie.Genre.Description);
+      })
+      .catch((err) => {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+      });
+});
+
+// READ. Responds with a json of the specific movie asked for director
+app.get('/movies/directors/:Name', (req, res) => {
+    Directors.findOne({ Name: req.params.Name })
+    .then((director) => {
+      res.json(director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+  });
+
+// CREATE. Adds a movie to a users list of favorite movies. - okay.
+app.post('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, 
+      { $push: { FavoriteMovies: req.params.MovieID }
+  },
+  { new: true }, // this line makes sure that the updated document is returned
+  (err, updatedUser) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+      } else {
+          res.json(updatedUser);
+      }
+  });
+});
+
+// READ. Gets information about a director. - okay.
+app.get('/director/:Name', (req, res) => {
+  Movies.findOne({ 'Director.Name': req.params.Name })
+      .then((movie) => {
+          res.json(movie.Director);
+      })
+      .catch((err) => {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+      });
+});
+
+
+// CREATE. Add a user and register. - okay.
+app.post('/users', (req, res) => {
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
+
+// UPDATE. Update user details. - okay.
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+    {
+      Username: req.body.Username,
+      Password: req.body.Password,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+    }
+  },
+  { new: true }, // This line makes sure that the updated document is returned
+  (err, updatedUser) => {
+    if(err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
+});
+
+// DELETE. Deletes a user by username. - okay.
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + ' was not found');
+      } else {
+        res.status(200).send(req.params.Username + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// DELETE. Deletes a movie from a users list of favorite movies. - okay.
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, 
+      { $pull: { FavoriteMovies: req.params.MovieID }
+  },
+  { new: true }, // this line makes sure that the updated document is returned
+  (err, updatedUser) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+      } else {
+          res.json(updatedUser);
+      }
+  });
+});
+
+// READ. Reads documentation. - okay.
+app.get('/documentation', (req, res) => {
+  res.sendFile('public/documentation.html', { root: __dirname });
+});
+
+// Serving Static Files
+app.use(express.static('public')); //static file given access via express static
+
+// Error Handling
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
+// Listen for requests
 app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.')
+  console.log('Your app is listening on port 8080.');
 });
