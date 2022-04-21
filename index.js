@@ -1,11 +1,9 @@
-const express = require('express'),
-  bodyparser = require('body-parser');
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
+const express = require('express');
+const app = express();
 
 const  morgan =require('morgan');
-const app = express();
+const  bodyParser = require('body-parser');
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
@@ -18,9 +16,15 @@ mongoose.connect('mongodb://localhost:27017/[myFlixDB]', {
   useUnifiedTopology: true,
  });
 
-app.use(bodyparser.json());
 //log requests to server
 app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+
 app.get('/', (req, res) => {
   res.send('Welcome to my myFlix website');
 });
@@ -87,7 +91,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 
 // READ. Get a movie by director
 app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne({ 'Director.Name': req.params.Name })
+  Movies.findOne({ 'Director.Name': req.params.Name })
     .then((movie) => {
       res.json(movie);
     })
@@ -95,7 +99,7 @@ app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false 
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
-  });
+});
 
 // CREATE. Adds a movie to a users list of favorite movies. - okay.
 app.post('/users/:Username/movies/:_ID', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -127,7 +131,7 @@ app.post('/users/:Username/movies/:_ID', passport.authenticate('jwt', { session:
 
 
 // CREATE. Add a user and register. - okay.
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users', (req, res) => {
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
