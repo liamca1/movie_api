@@ -1,234 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"></html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>myFlix API</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <style>
+          table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          td, th {
+            border: 1px solid #5c3f3f;
+            text-align: left;
+            padding: 8px;
+          }
+          
+          tr:nth-child(even) {
+            background-color: #ffffff;
+          }
+          </style>  </head>
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myFlix API</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-      
-      td, th {
-        border: 1px solid #5c3f3f;
-        text-align: left;
-        padding: 8px;
-      }
-      
-      tr:nth-child(even) {
-        background-color: #ffffff;
-      }
-      </style>
-  </head>
-  <body class="container">
-      <h1>myFlix App Documentation</h1>
-      <p><mark>
-          Web application that provides users with access to information about different movies, directors, and genres. Users are able to sign up, update their personal information, and create a list of their favourite movies.
-      </mark>
-    </p>
-    <table class="table table-hover align-middle">
-        <thread>
-            <tr>
-                <th scope="col">Business Logic</th>
-                <th scope="col">URL</th>
-                <th scope="col">HTTP Method</th>
-                <th scope="col">Query parameters</th>
-                <th scope="col">Request body data format</th>
-                <th scope="col">Response body data format</th>
-            </tr>
-            </thread>
-            <tbody>
-                <tr>
-                    <td>Return a list of all movies to the user</td>
-                    <td>/movies</td>
-                    <td>GET</td>
-                    <td>none</td>
-                    <td>none</td>
-                    <td>JSON object holding data about all movies</td>
-                </tr>
-                <tr>
-                    <td>Return data about a single movie by title</td>
-                    <td>/movies/[title]</td>
-                    <td>GET</td>
-                    <td>:title</td>
-                    <td>none</td>
-                    <td>JSON object holding all data about the selected movie (description, year, genre, director, cast & img URL. e.g. 
-                        <pre>
-                            <code>
-                {
-                    Title: ''
-                    Description: ''
-                    Year: ''
-                    Genre: {
-                        name: ''
-                        description: ''
-                    }
-                    Director: {
-                        name: ''
-                        birth: ''
-                        death: ''
-                        bio: ''
-                    }
-                    Cast: {
+<body>
+  <header>
+      <h1> 
+         <p> Welcome to myFlix!</p> 
+      </h1>
 
-                    }
-                    ImagePath: ''
-                }
-                            </code>
-                        </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Return data about a genre (description) by name</td>
-                    <td>/movies/genres/[genre]</td>
-                    <td>GET</td>
-                    <td>genre</td>
-                    <td>none</td>
-                    <td>JSON object holding data about the selected genre. E.g. 
-                        <pre>
-                            <code>
-                {
-                    name: 'Drama'
-                    description: '',
-                }
-                            </code>
-                        </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Return data about a director by name</td>
-                    <td>/movies/directors/[director]</td>
-                    <td>GET</td>
-                    <td>director</td>
-                    <td>none</td>
-                    <td>JSON object holding data about the selected director
-                        <pre>
-                            <code>
-                {
-                    name: 'Francis Ford Coppola'
-                    birth: '1939'
-                    death: '-'
-                    bio: '',
-                }    
-                            </code>
-                        </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Allow new users to register</td>
-                    <td>/users</td>
-                    <td>POST</td>
-                    <td>none</td>
-                    <td>A JSON object holding data about the new user. e.g. 
-                        <pre>
-                            <code>
-                {
-                    username: "username123"
-                    email: "username123@hotmail.com"
-                    password: "Similarly>December4>Pantry"
-                    date of birth: "01/05/1996"
-                    favorites: [
-                    "Apocalypse Now"
-                    ]
-                }
-                            </code>
-                        </pre>
-                    <td>A JSON object holding data about the added user including ID. e.g.
-                        <pre>
-                            <code>
-                {
-                    id: '1'
-                    username: "username123"
-                    email: "username123@hotmail.com"
-                    password: "Similarly>December4>Pantry"
-                    date of birth: "01/05/1996"
-                    favorites: [
-                    "Apocalypse Now"
-                    ]"
-                }
-                            </code>
-                        </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Allow users to update their user info (username)</td>
-                    <td>/users/[username]</td>
-                    <td>PUT</td>
-                    <td>:username</td>
-                    <td>JSON object holding the new username. e.g.
-                        <pre>
-                            <code>
-                                {
-                                    "username": "NewUserName321"
-                                }
-                            </code>
-                        </pre>
-                    </td>
-                    <td>JSON Object with the updated user profile. e.g.
-                        <pre>
-                            <code>
-                {
-                    id: "1"
-                    username: "NewUserName321"
-                    email: "username123@hotmail.com"
-                    password: "Similarly>December4>Pantry"
-                    birthday: "01/05/1996"
-                    favourites: [
-                            'Apocalypse Now'
-                    ]
-                }
-                            </code>
-                        </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Allow users to add a movie to their list of favourites (showing only a text that a movie has been added)</td>
-                    <td>/users/[username]/favourites</td>
-                    <td>POST</td>
-                    <td>:username, :movie</td>
-                    <td>none</td>
-                    <td>textual message that the movie was added</td>
-                </tr>
-                <tr>
-                    <td>Allow users to remove a movie from their list of favourites</td>
-                    <td>/users/[username]/[movie]</td>
-                    <td>DELETE</td>
-                    <td>:username, :movie</td>
-                    <td>none</td>
-                    <td>textual message that the movie was deleted</td>
-                </tr>
-                <tr>
-                    <td>Allow existening users to deregister</td>
-                    <td>/users/[username]</td>
-                    <td>DELETE</td>
-                    <td>:username</td>
-                    <td>none</td>
-                    <td>textual message that the user account was deregistered</td>
-                </tr>
-            </tbody>
+    <h2>
+      <p> This Web application will provide users with access to information about different movies, directors, and genres.</p> 
+      <p> Users will be able to sign up, update their personal information, and create a list of their favorite movies. </p> 
+    
+    </h2> 
+</header>
+
+<main> 
+  <table>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>Request Parameter</th>
+        <th>HTTP Method</th>
+        <th>Response body data format</th>
+        <th>Request body data format</th>
+      </tr>
+
+      <tr>
+        <td>List of movies on myFlifx </td>
+        <td>"/movies"</td>
+        <td>none</td>
+        <td>GET <br>app.get("/movies", (req,res) =>{
+              res.send('Successful GET request returns all the movies available on myFlix');});</td>
+        <td>
+            A JSON object holding data about all the movies <br />
+            Example: {Title: "", Description: ""} <br />
+            Director: { Name: "", Bio: "" }, Genre: { Name: "", Description:""} }
+        </td>
+        <td>None</td>
+      </tr>
+
+      <tr>
+        <td>Search a movie</td>
+        <td>"/movies/:title"</td>
+        <td>:title</td>
+        <td>GET <br>app.get("/movies/:title", (req,res)=> {
+          res.send('Successful GET request returns searched movie');});</td>
+          <td>
+            A JSON object holding data about a single movie <br />
+            Example: {Title: "", Description: ""}
+          </td>
+        <td>None</td>
+    </tr>
+
+      <tr>
+        <td>Search a genre of movie </td>
+        <td>"'/movies/genre/:genreName"</td>
+        <td>:genreName</td>
+        <td>GET<br>app.get("'/movies/genre/:genreName", (req,res) => {
+          res.send('Successful GET request returning list of movies called by searched genre');});</td>
+          <td>
+          A JSON object holding data about a genre <br />
+          Example: Genre: { Name: ""}
+          </td> 
+          <td>None </td>
+      </tr>
+      
+      <tr>
+        <td>Search a director by name</td>
+        <td>"/movies/director/:directorName"</td>
+        <td>:name</td>
+        <td>GET <br>app.get("/movies/directors/:name", (req,res) => {
+          res.send('Successful GET request returning data about a specific director with a Bio');});</td>
+            <td>A JSON object holding data about a director <br />
+              Example: Director: { Name: "", Bio: "" }</td> 
+          <td>None </td>
+        </tr>
+      
+      <tr>
+          <td>Creates new users Account</td>
+          <td>"/users"</td>
+          <td>none</td>
+          <td>POST <br>app.post("/users", (req,res) => {
+          req.post('Successful POST will create a new user Account');});</td>
+          <td>None</td>
+          <td>
+            A JSON object is requested  <br />
+            Example: {
+              name: String,
+              Password: String,
+              Email: String,
+              Birthday: Date
+            }
+          </td>
+        </tr>
+    
+
+      <tr>
+          <td>Update user's info</td>
+          <td>"/users/:id"</td>
+          <td>:id</td>
+          <td>PUT <br>app.put("/users/:id", (req,res) =>{
+          req.put('Successful PUT will allow user to update their info');});</td>
+          <td> A JSON object is provided after changes  <br />
+            Example: {
+              name: String,
+              Password: String,
+              Email: String,
+              Birthday: Date
+            }</td>
+          <td>
+            A JSON object is requested holding data about User <br />
+            Example: {
+              name: String,
+              Password: String,
+              Email: String,
+              Birthday: Date
+            }
+          </td>
+        </tr>
+
+      <tr>
+          <td>Add a movie to User's list of favorites</td>
+          <td>"/users/:id/:movieTitle"</td>
+          <td>:id,:movieTitle</td>
+          <td>POST <br>app.post("/users/:id/:movieTitle", (req,res)  =>{
+          req.put('Successful POST will add movie to user's list');});</td>
+          <td>A text message indicating that the movie has been added</td>
+          <td>None</td>
+    
+        </tr>
+
+      <tr>
+          <td>Remove a movie from their list of favorites</td>
+          <td>"/users/:id/:movieTitle"</td>
+          <td>:id,:movieTitle</td>
+          <td>DELETE <br>app.delete("/users/:id/:movieTitle", (req,res)  =>{
+          res.delete('Successful DELETE will DELETE a movie from user's list');});</td>
+          <td>A text message indicating that the movie has been deleted</td></td> 
+          <td>None</td>
+     
+        </tr>
+
+      <tr>
+            <td>Delete user's Account</td>
+            <td>"/users/:id"</td>
+            <td>:id</td>
+            <td>DELETE <br> app.delete("/users/:id",(req,res) =>{
+              res.delete('Successful DELETE will DELETE a user's Account');});</td>
+              <td>A text message indicating that the user has been deleted</td>
+            <td>None</td>
+ 
+      </tr>
+      
     </table>
 
-    <a>
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Love & Friendship', '1790s: Susan Vernon has no redeeming virtues other than saucy charm and truly Wildean wit. She decamps to her sister-in-law Catherine’s elegant country estate to escape the adverse effects of a scandal circulating through polite society, and to secure a replacement for her recently deceased husband.', '1', '1', 'love_and_friendship.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('The Last Days of Disco', 'The final entry in Whit Stillman’s “trilogy,” brimming with the writer-director’s trademark dry humor, The Last Days of Disco is a cleverly comic look at the early 1980s Manhattan party scene from the vantage point of the late nineties, an affectionate yet unsentimental look at the end of an era.', '1', '2', 'the_last_days_of_disco.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Aguirre, The Wrath of God', 'The legend of El Dorado, a land rich in gold, tempts Gonzalo Pizarro to lead an expedition beyond the Andes in 1560. Forced to halt, two men are sent downriver with a patrol. When their rafts are damaged, one decides to return to the camp, while Aguirre leads a mutiny and takes charge of the patrol.', '2', '3', 'aguirre_the_wrath_of_god.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Taxi Driver', 'Isolated ex-marine Travis Bickle applies for a job as a taxi driver, hoping that the night-time work will alleviate the effects of his insomnia. But as he ferries passengers across New York, and embarks on a mission to save a teenager from prostitution, his sense of place and purpose steadily warps.', '3', '1', 'taxi_driver.pmg', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('The Irishman', 'An epic saga of organized crime told through the eyes of WWII veteran Frank Sheeran—a hustler and hitman who worked with some of the most notorious figures of the 20th century— chronicling one of the greatest unsolved mysteries in U.S. history, the disappearance of legendary union boss Jimmy Hoffa.', '3', '4', 'the_irishman.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Mare', 'Routinely, but with dedication, Mare runs her small family’s modest household, although a new washing machine is not the only thing that is missing. When a chance encounter rekindles her libido, she does not hold back for long.', '5', '1');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Zero Fucks Given', 'Cassandra is a flight attendant for a low-cost airline, always willing to take on extra hours and carrying out her duties efficiently. On the side, she floats between dating apps, parties, and lazy days. When she suddenly gets fired, will she finally confront what she was running away from?', '2', '5', 'zero_fucks_given.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Four Roads', 'The COVID-19 pandemic forced many to stay at home, preventing people from meeting each other in real life. In the absence of any physical connection, this short explores alternative forms of contact among neighbors by making use of an old 16mm camera, a zoom lens, and a few meters of expired film.', '5', '6', 'four_roads.png', 'Y');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Born in Flames', 'In near-future New York, 10 years after the “social-democratic war of liberation,” diverse groups of women organize a feminist uprising as equality remains unfulfilled.', '7', '2', 'born_in_flames.png', 'N');
-        INSERT INTO Movies(Title, Description, DirectorID, GenreID, ImageURL, Featured) VALUES('Moonrise Kingdom', 'In the summer of 1965, two 12-year-olds fall in love, make a secret pact, and run away together into the wilderness. As various authorities and a troop of Boy Scouts try to hunt them down, a violent storm is brewing off-shore – and the peaceful New England island community is turned upside down.', '8', '2', 'moonrise_kingdom.png', 'N');
-    </a>
 
-    <a>
-        
+</main>
 
 
-    </a>
-  </body>
-</html>          
+
+</body>
+
+</html>
+
+db: myFlixDB
+collectionNames: "genres", "movies", "users",
