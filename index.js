@@ -7,6 +7,9 @@ const  bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
+const { check, validationResult, check } =
+require('express-validator');
+
 const Movies = Models.Movie;
 const Users = Models.User;
 const Genres = Models.Genre;
@@ -20,6 +23,19 @@ mongoose.connect('mongodb://localhost:27017/[myFlixDB]', {
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Cross-Origin Resource Sharing
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn't found on the list of allowed origins
+      let message = "The CORS policy for this application doesn't allow access from origin " + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -131,7 +147,18 @@ app.post('/users/:Username/movies/:_ID', passport.authenticate('jwt', { session:
 
 
 // CREATE. Add a user and register. - okay.
-app.post('/users', (req, res) => {
+app.post('/users', [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
+
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
@@ -140,7 +167,7 @@ app.post('/users', (req, res) => {
         Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
@@ -225,6 +252,7 @@ app.use((err, req, res, next) => {
 });
 
 // Listen for requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port);
 });
