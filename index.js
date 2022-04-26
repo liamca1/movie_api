@@ -1,18 +1,20 @@
 const express = require('express');
 const app = express();
 
-const  morgan =require('morgan');
-const  bodyParser = require('body-parser');
-
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
-const { check, validationResult, check } =
-require('express-validator');
+const cors = require('cors');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 const Genres = Models.Genre;
+
+const  morgan =require('morgan'),
+  bodyParser = require('body-parser'),
+  uuid = require('uuid');
+
+const { check, validationResult, } =
+require('express-validator');
 
 /*
 mongoose.connect('mongodb://localhost:27017/newFlixDB', { 
@@ -21,7 +23,7 @@ mongoose.connect('mongodb://localhost:27017/newFlixDB', {
  });
 */
 
-mongoose.connect('process.env.CONNECTION_URI', { 
+mongoose.connect('process.env.CONNECTION_URI' || "mongodb://localhost:27017/newFlixDB", { 
   useNewUrlParser: true,
   useUnifiedTopology: true,
  });
@@ -47,6 +49,9 @@ app.use(cors({
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
+
+// Serving Static Files
+app.use(express.static('public')); //static file given access via express static
 
 app.get('/', (req, res) => {
   res.send('Welcome to my myFlix website');
@@ -249,8 +254,6 @@ app.get('/documentation', passport.authenticate('jwt', { session: false }), (req
   res.sendFile('public/documentation.html', { root: __dirname });
 });
 
-// Serving Static Files
-app.use(express.static('public')); //static file given access via express static
 
 // Error Handling
 app.use((err, req, res, next) => {
