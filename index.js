@@ -33,7 +33,8 @@ app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Cross-Origin Resource Sharing
+// CORS: Cross-Origin Resource Sharing
+/*
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -45,6 +46,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+*/
 
 let auth = require('./auth')(app);
 const passport = require('passport');
