@@ -23,7 +23,7 @@ mongoose.connect('mongodb://localhost:27017/newFlixDB', {
  });
 */
 
-mongoose.connect('process.env.CONNECTION_URI', { 
+mongoose.connect(process.env.CONNECTION_URI || "mongodb://localhost:27017/newFlixDB", { 
   useNewUrlParser: true,
   useUnifiedTopology: true,
  });
