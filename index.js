@@ -34,7 +34,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // CORS: Cross-Origin Resource Sharing
-/*
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -46,7 +45,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-*/
 
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -202,14 +200,7 @@ app.post('/users',
 });
 
 // UPDATE. Update user details. - okay.
-app.put ('/users/:Username', [
-  check('Username', 'Username is required').isLength({min: 5}),
-  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-  check('Password', 'Password is required').not().isEmpty(),
-  check('Email', 'Email does not appear to be valid').isEmail()
-],
-
-passport.authenticate('jwt', { session: false}), (req, res) =>{
+app.put ('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) =>{
    //Check the validation object for errors
    let errors = validationResult(req);
 
