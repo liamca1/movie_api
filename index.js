@@ -128,7 +128,7 @@ passport.authenticate('jwt', { session: false}), (req, res) => {
 });
 
 //Create Movie
-app.path('/users/:Username/:movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $push: { FavouriteMovies: req.params.MovieID }
   },
