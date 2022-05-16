@@ -206,6 +206,18 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req,
   });
 });
 
+//Return user data by username
+app.get('/user/:username', passport.authenticate('jwt', { session: false}), (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+  .then((users) => {
+    res.json(users);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
+});
+
 //Return data about a genre (via 'movies' endpoint - not through the 'genres' enpoint)
 app.get('/movies/genre/:Name', passport.authenticate('jwt', { session: false}), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Name}) 
