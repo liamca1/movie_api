@@ -159,21 +159,7 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
   });
 });
 
-//Add Favourite Movie
-app.put('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username },
-    { $pull: { FavouriteMovies: req.params.MovieID }
-  },
-  { new: true },
-  (err, updatedusers) => {
-    if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    } else {
-        res.json(updatedusers);
-    }
-  });
-});
+
 
 //Delete User
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
