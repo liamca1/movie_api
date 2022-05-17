@@ -212,7 +212,7 @@ app.get('/movies', (req, res) => {
 });
 
 //Return data about a movie by title
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ Title: req.params.Title })
   .then((movies) => {
     res.json(movies);
