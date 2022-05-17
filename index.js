@@ -146,19 +146,19 @@ passport.authenticate('jwt', { session: false}), (req, res) => {
 });
 
 //Create Movie
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $push: { FavouriteMovies: req.params.MovieID }
   },
-    { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.status(201).send('Movie was added to Favourites.');
-      }
-    });
+  { new: true }, // This line makes sure that the updated document is returned
+  (err, updatedusers) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedusers);
+    }
+  });
 });
 
 //Delete Favourite Movie
@@ -167,12 +167,12 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
     { $pull: { FavouriteMovies: req.params.MovieID }
   },
   { new: true },
-  (err, updatedUser) => {
+  (err, updatedusers) => {
     if (err) {
         console.error(err);
         res.status(500).send('Error: ' + err);
     } else {
-        res.json(updatedUser);
+        res.json(updatedusers);
     }
   });
 });
@@ -223,15 +223,15 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req,
 });
 
 //Return user data by username
-app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/user/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOne({ Username: req.params.Username })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+  .then((users) => {
+    res.json(users);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
 });
 
 //Return data about a genre (via 'movies' endpoint - not through the 'genres' enpoint)
