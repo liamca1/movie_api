@@ -8,6 +8,7 @@ const express = require('express'),
   Movies = Models.Movie,
   Users = Models.User;
 
+const port = process.env.PORT || 8080;
 //body-parser middleware module allows you to read the body of http requests within your request handlers simply by using the code: req.body
 app.use(bodyParser.json());
 
