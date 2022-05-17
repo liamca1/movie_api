@@ -222,6 +222,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req,
   });
 });
 
+<<<<<<< HEAD
 //Return user data by username
 app.get('/user/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOne({ Username: req.params.Username })
@@ -234,6 +235,8 @@ app.get('/user/:Username', passport.authenticate('jwt', { session: false}), (req
   });
 });
 
+=======
+>>>>>>> parent of 530e326 (add get user data endpoint)
 //Return data about a genre (via 'movies' endpoint - not through the 'genres' enpoint)
 app.get('/movies/genre/:Name', passport.authenticate('jwt', { session: false}), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Name}) 
