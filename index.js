@@ -127,7 +127,7 @@ passport.authenticate('jwt', { session: false}), (req, res) => {
   }
 
   let hashedPassword = Users.hashPassword(req.body.Password);
-  Users.findOneAndUpdate({ User: req.params.Username }, {
+  Users.findOneAndUpdate({ Users: req.params.Username }, {
     $set:
     {
       Username: req.body.Username,
@@ -224,7 +224,7 @@ app.get('/movies/:Title', (req, res) => {
 });
 
 //Return user data by username
-app.get('/user/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOne({ Username: req.params.Username })
   .then((users) => {
     res.json(users);
