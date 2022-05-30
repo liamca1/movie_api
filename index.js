@@ -120,7 +120,7 @@ app.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Users.findOne({ Username: req.params.Username })
-      .populate('FavoriteMovies', 'Title')
+      .populate('FavouriteMovies', 'Title')
       .then((user) => {
         res.status(201).json(user);
       })
@@ -231,10 +231,10 @@ app.put(
   (req, res) => {
     Users.findOneAndUpdate(
       { Username: req.params.Username },
-      { $addToSet: { FavoriteMovies: req.params.MovieId } },
+      { $addToSet: { FavouriteMovies: req.params.MovieId } },
       { new: true } // line makes sure that the update document is returned
     )
-      .populate('FavoriteMovies', 'Title')
+      .populate('FavouriteMovies', 'Title')
       .then((updateUser) => {
         res.status(201).json(updateUser);
       })
@@ -252,10 +252,10 @@ app.delete(
   (req, res) => {
     Users.findOneAndUpdate(
       { Username: req.params.Username },
-      { $pull: { FavoriteMovies: req.params.MovieId } },
+      { $pull: { FavouriteMovies: req.params.MovieId } },
       { new: true } // line makes sure that the update document is returned
     )
-      .populate('FavoriteMovies', 'Title')
+      .populate('FavouriteMovies', 'Title')
       .then((updateUser) => {
         res.status(201).json(updateUser);
       })
